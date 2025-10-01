@@ -1,0 +1,45 @@
+﻿version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    container_name: ntc-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: ntc-bus-tracking
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - ntc-network
+
+  # NTC Bus Tracking API
+  api:
+    build: .
+    container_name: ntc-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/ntc-bus-tracking?authSource=admin
+      JWT_SECRET: production-jwt-secret-key-2024
+      CORS_ORIGIN: "*"
+    depends_on:
+      - mongodb
+    networks:
+      - ntc-network
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  mongodb_data:
+
+networks:
+  ntc-network:
+    driver: bridge
