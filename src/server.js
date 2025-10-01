@@ -30,7 +30,9 @@ class BusTrackingServer {
       }
     });
     this.port = process.env.PORT || 3000;
-    this.mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/ntc-bus-tracking';
+    this.mongoUri =
+      process.env.MONGODB_URI ||
+      "mongodb+srv://lasithud_db_user:8o946HBMqW27HGQR@cluster0.jzsvepz.mongodb.net/ntc-bus-tracking?retryWrites=true&w=majority&appName=Cluster0";
   }
 
   async initialize() {
@@ -53,9 +55,9 @@ class BusTrackingServer {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       });
-      console.log('âœ… Connected to MongoDB');
+      console.log('Connected to MongoDB');
     } catch (error) {
-      console.error('âŒ MongoDB connection error:', error);
+      console.error('MongoDB connection error:', error);
       throw error;
     }
   }
@@ -126,25 +128,24 @@ class BusTrackingServer {
 
   startServer() {
     this.server.listen(this.port, () => {
-      console.log(`ðŸšŒ NTC Bus Tracking API Server running on port ${this.port}`);
-      console.log(`ðŸ“¡ WebSocket server initialized`);
-      console.log(`ðŸŒ Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`ðŸ“Š Health check: http://localhost:${this.port}/health`);
+      console.log(`NTC Bus Tracking API Server running on port ${this.port}`);
+      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`Health check: http://localhost:${this.port}/health`);
     });
 
     // Graceful shutdown
-    process.on('SIGTERM', () => {
-      console.log('SIGTERM received, shutting down gracefully');
+    process.on("SIGTERM", () => {
+      console.log("SIGTERM received, shutting down gracefully");
       this.server.close(() => {
-        console.log('Process terminated');
+        console.log("Process terminated");
         process.exit(0);
       });
     });
 
-    process.on('SIGINT', () => {
-      console.log('SIGINT received, shutting down gracefully');
+    process.on("SIGINT", () => {
+      console.log("SIGINT received, shutting down gracefully");
       this.server.close(() => {
-        console.log('Process terminated');
+        console.log("Process terminated");
         process.exit(0);
       });
     });
