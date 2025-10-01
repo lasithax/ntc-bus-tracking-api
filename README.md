@@ -1,14 +1,12 @@
 ﻿# NTC Bus Tracking System API
 
-## Student ID: [Your Student ID]
-
 A comprehensive Real-Time Bus Tracking System for the National Transport Commission of Sri Lanka (NTC) to monitor inter-provincial buses across Sri Lanka.
 
-## ðŸšŒ Project Overview
+## Project Overview
 
 This RESTful API provides live GPS-based location data for long-distance buses operating between provinces, enabling real-time tracking and status updates for NTC officials, bus operators, and commuters.
 
-## ðŸ—ï¸ Architecture
+## Architecture
 
 - **Backend**: Node.js with Express.js framework
 - **Database**: MongoDB with Mongoose ODM
@@ -16,7 +14,7 @@ This RESTful API provides live GPS-based location data for long-distance buses o
 - **Validation**: Joi for request validation
 - **Security**: Helmet for security headers, CORS enabled
 
-## ðŸš€ Features
+## Features
 
 - Real-time bus location tracking
 - Route management and scheduling
@@ -25,7 +23,7 @@ This RESTful API provides live GPS-based location data for long-distance buses o
 - WebSocket support for live updates
 - Comprehensive API documentation
 
-## ðŸ“‹ API Endpoints
+## API Endpoints
 
 ### Routes
 - `GET /api/v1/routes` - Get all bus routes
@@ -46,11 +44,11 @@ This RESTful API provides live GPS-based location data for long-distance buses o
 - `POST /api/v1/trips` - Create new trip
 - `PUT /api/v1/trips/:id` - Update trip
 
-## ðŸ› ï¸ Installation
+## Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/ntc-bus-tracking-api.git
+git clone https://github.com/lasithax/ntc-bus-tracking-api.git
 cd ntc-bus-tracking-api
 ```
 
@@ -62,7 +60,6 @@ npm install
 3. Set up environment variables:
 ```bash
 cp .env.example .env
-# Edit .env with your configuration
 ```
 
 4. Start the development server:
@@ -75,13 +72,13 @@ npm run dev
 npm run seed
 ```
 
-## ðŸš€ Deployment
+## Deployment
 
-The API is deployed on [Your Deployment Platform] and accessible at:
-- **API Base URL**: [Your API URL]
-- **WebSocket URL**: [Your WebSocket URL]
+The API is deployed on [Deployment Platform] and accessible at:
+- **API Base URL**: [API URL]
+- **WebSocket URL**: [WebSocket URL]
 
-## ðŸ“Š Simulation Data
+## Simulation Data
 
 The system includes simulation data for:
 - 5 inter-provincial routes
@@ -89,19 +86,19 @@ The system includes simulation data for:
 - 1 week of historical data
 - Real-time location updates
 
-## ðŸ”§ Development
+## Development
 
 ### Project Structure
 ```
 src/
-â”œâ”€â”€ controllers/     # Route controllers
-â”œâ”€â”€ models/         # Database models
-â”œâ”€â”€ routes/         # API routes
-â”œâ”€â”€ middleware/     # Custom middleware
-â”œâ”€â”€ services/       # Business logic
-â”œâ”€â”€ utils/          # Utility functions
-â”œâ”€â”€ scripts/        # Database seeding scripts
-â””â”€â”€ server.js       # Main server file
+controllers/     # Route controllers
+models/         # Database models
+routes/         # API routes
+middleware/     # Custom middleware
+services/       # Business logic
+utils/          # Utility functions
+scripts/        # Database seeding scripts
+server.js       # Main server file
 ```
 
 ### Testing
@@ -109,25 +106,24 @@ src/
 npm test
 ```
 
-## ðŸ“ API Documentation
+## API Documentation
 
-Full API documentation is available at: [Your API Documentation URL]
+Full API documentation is available at: 
 
-## ðŸ¤ Contributing
+## Contributing
 
 This project is developed for academic purposes as part of the coursework requirements.
 
-## ðŸ“„ License
+## License
 
 MIT License - see LICENSE file for details.
 
-## ðŸ‘¨â€ðŸ« Instructor Access
+## Instructor Access
 
 Instructor has been added as a collaborator to this repository for evaluation purposes.
 
-## ðŸ”— Links
+## Links
 
-- **Deployed API**: [Your API URL]
-- **GitHub Repository**: [Your GitHub URL]
-- **API Documentation**: [Your Documentation URL]
-- **AI Tools Used**: [List of AI tools used in development]
+- **Deployed API**: [API URL]
+- **GitHub Repository**: [https://github.com/lasithax/ntc-bus-tracking-api.git]
+- **API Documentation**: [Documentation URL]
