@@ -124,6 +124,6 @@ Instructor has been added as a collaborator to this repository for evaluation pu
 
 ## Links
 
-- **Deployed API**: [API URL]
+- **Deployed API**: [https://ntc-bus-tracking-api-production.up.railway.app/]
 - **GitHub Repository**: [https://github.com/lasithax/ntc-bus-tracking-api.git]
 - **API Documentation**: [Documentation URL]
