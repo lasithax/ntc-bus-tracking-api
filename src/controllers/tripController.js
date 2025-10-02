@@ -206,6 +206,79 @@ class TripController {
       next(error);
     }
   }
+
+  // Update trip
+  static async updateTrip(req, res, next) {
+    try {
+      const { id } = req.params;
+      const updateData = req.body || {};
+
+      // Whitelist allowed fields for update
+      const allowed = {};
+      if (updateData.schedule) {
+        allowed['schedule.plannedStartTime'] = updateData.schedule.plannedStartTime;
+        allowed['schedule.plannedEndTime'] = updateData.schedule.plannedEndTime;
+      }
+      if (updateData.passengers) {
+        if (typeof updateData.passengers.total !== 'undefined') {
+          allowed['passengers.total'] = updateData.passengers.total;
+        }
+        if (typeof updateData.passengers.capacity !== 'undefined') {
+          allowed['passengers.capacity'] = updateData.passengers.capacity;
+        }
+      }
+      if (updateData.status) {
+        allowed.status = updateData.status;
+      }
+
+      const trip = await Trip.findOneAndUpdate(
+        { tripId: id },
+        { $set: allowed },
+        { new: true, runValidators: true }
+      );
+
+      if (!trip) {
+        return res.status(404).json({
+          success: false,
+          error: { message: 'Trip not found', statusCode: 404 }
+        });
+      }
+
+      res.json({
+        success: true,
+        data: trip,
+        message: 'Trip updated successfully'
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // Delete trip
+  static async deleteTrip(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      const trip = await Trip.findOneAndDelete({ tripId: id });
+      if (!trip) {
+        return res.status(404).json({
+          success: false,
+          error: { message: 'Trip not found', statusCode: 404 }
+        });
+      }
+
+      // Clear bus current trip if it matches
+      await Bus.updateMany(
+        { 'currentTrip.tripId': id },
+        { $unset: { currentTrip: 1 } }
+      );
+
+      res.json({ success: true, message: 'Trip deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
+
 
 module.exports = TripController;
