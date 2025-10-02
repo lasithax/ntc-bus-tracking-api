@@ -19,8 +19,18 @@ const notFound = require('./middleware/notFound');
 // Import services
 const SocketService = require('./services/socketService');
 
-// Import Swagger
-const { swaggerUi, specs } = require('./config/swagger');
+// Import Swagger with error handling
+let swaggerUi, specs;
+try {
+  const swagger = require('./config/swagger');
+  swaggerUi = swagger.swaggerUi;
+  specs = swagger.specs;
+  console.log('âœ… Swagger modules loaded successfully');
+} catch (error) {
+  console.log('âš ï¸ Swagger modules not available:', error.message);
+  swaggerUi = null;
+  specs = null;
+}
 
 class BusTrackingServer {
   constructor() {
@@ -90,16 +100,68 @@ class BusTrackingServer {
 
   setupRoutes() {
     // Swagger Documentation
-    this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs, {
-      explorer: true,
-      customCss: '.swagger-ui .topbar { display: none }',
-      customSiteTitle: 'NTC Bus Tracking API Documentation'
-    }));
+    if (swaggerUi && specs) {
+      this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs, {
+        explorer: true,
+        customCss: '.swagger-ui .topbar { display: none }',
+        customSiteTitle: 'NTC Bus Tracking API Documentation'
+      }));
+      console.log('ðŸ“š Swagger documentation available at /api/docs');
+    } else {
+      // Fallback documentation endpoint
+      this.app.get('/api/docs', (req, res) => {
+        res.json({
+          message: 'API Documentation',
+          note: 'Swagger UI not available. Please check the API endpoints below.',
+          endpoints: {
+            health: 'GET /health',
+            routes: {
+              getAll: 'GET /api/v1/routes',
+              getById: 'GET /api/v1/routes/:id',
+              create: 'POST /api/v1/routes',
+              update: 'PUT /api/v1/routes/:id',
+              delete: 'DELETE /api/v1/routes/:id'
+            },
+            buses: {
+              getAll: 'GET /api/v1/buses',
+              getById: 'GET /api/v1/buses/:id',
+              create: 'POST /api/v1/buses',
+              updateLocation: 'PUT /api/v1/buses/:id/location'
+            },
+            trips: {
+              getAll: 'GET /api/v1/trips',
+              getById: 'GET /api/v1/trips/:id',
+              create: 'POST /api/v1/trips',
+              getActive: 'GET /api/v1/trips/active',
+              getStats: 'GET /api/v1/trips/stats'
+            }
+          }
+        });
+      });
+      console.log('ðŸ“‹ Fallback API documentation available at /api/docs');
+    }
 
     // API routes
     this.app.use('/api/v1/routes', routeRoutes);
     this.app.use('/api/v1/buses', busRoutes);
     this.app.use('/api/v1/trips', tripRoutes);
+
+    // Seeding endpoint
+    this.app.post('/api/seed', async (req, res) => {
+      try {
+        const { exec } = require('child_process');
+        exec('npm run seed', (error, stdout, stderr) => {
+          if (error) {
+            console.error('Seeding error:', error);
+            return res.status(500).json({ success: false, error: error.message });
+          }
+          console.log('Seeding output:', stdout);
+          res.json({ success: true, message: 'Database seeded successfully', output: stdout });
+        });
+      } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+      }
+    });
 
     // Root endpoint
     this.app.get('/', (req, res) => {
@@ -126,6 +188,9 @@ class BusTrackingServer {
   }
 
   setupSocketIO() {
+    // Make io instance available to Express app
+    this.app.set('io', this.io);
+    
     // Initialize socket service
     const socketService = new SocketService(this.io);
     socketService.initialize();
