@@ -64,15 +64,11 @@ const busSchema = new mongoose.Schema({
     location: {
       latitude: {
         type: Number,
-        required: function() {
-          return this.currentStatus.status === 'active';
-        }
+        required: false
       },
       longitude: {
         type: Number,
-        required: function() {
-          return this.currentStatus.status === 'active';
-        }
+        required: false
       },
       address: String,
       lastUpdated: {
@@ -204,9 +200,12 @@ busSchema.virtual('currentLocation').get(function() {
   return null;
 });
 
-// Index for geospatial queries
+// Index for geospatial queries (only when coordinates exist)
 busSchema.index({ 
-  'currentStatus.location': '2dsphere'
+  'currentStatus.location.latitude': 1,
+  'currentStatus.location.longitude': 1
+}, {
+  sparse: true
 });
 
 // Index for status and route queries
@@ -266,16 +265,18 @@ busSchema.statics.findByStatus = function(status) {
 };
 
 // Static method to find buses near a location
-busSchema.statics.findNearLocation = function(latitude, longitude, maxDistance = 1000) {
+busSchema.statics.findNearLocation = function(latitude, longitude, maxDistance = 5) {
+  // Convert maxDistance from km to degrees (approximate)
+  const maxDistanceInDegrees = maxDistance / 111; // 1 degree â‰ˆ 111 km
+  
   return this.find({
-    'currentStatus.location': {
-      $near: {
-        $geometry: {
-          type: 'Point',
-          coordinates: [longitude, latitude]
-        },
-        $maxDistance: maxDistance
-      }
+    'currentStatus.location.latitude': {
+      $gte: latitude - maxDistanceInDegrees,
+      $lte: latitude + maxDistanceInDegrees
+    },
+    'currentStatus.location.longitude': {
+      $gte: longitude - maxDistanceInDegrees,
+      $lte: longitude + maxDistanceInDegrees
     },
     'currentStatus.status': 'active'
   });
