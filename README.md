@@ -1,4 +1,6 @@
-﻿# NTC Bus Tracking System API
+Student Index - COBSCCOMPY4231P-017
+ 
+ # NTC Bus Tracking System API
 
 A comprehensive Real-Time Bus Tracking System for the National Transport Commission of Sri Lanka (NTC) to monitor inter-provincial buses across Sri Lanka.
 
@@ -127,3 +129,4 @@ Instructor has been added as a collaborator to this repository for evaluation pu
 - **Deployed API**: [https://ntc-bus-tracking-api-production.up.railway.app/]
 - **GitHub Repository**: [https://github.com/lasithax/ntc-bus-tracking-api.git]
 - **API Documentation**: [https://ntc-bus-tracking-api-production.up.railway.app/api/docs/]
+
